@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7a1c58fd-1bd0-4549-b826-20ca2b8bc479}</ProjectGuid>
-    <RootNamespace>MarkdownTableParser</RootNamespace>
+    <ProjectGuid>{395b64d6-3e4c-41a4-a8d1-0bc1d21f9855}</ProjectGuid>
+    <RootNamespace>TextFilesManager</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,14 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MarkdownTableParser.cpp" />
-    <ClCompile Include="Table.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ProjectEnums.h" />
-    <ClInclude Include="MarkdownTableParser.h" />
-    <ClInclude Include="Table.h" />
+    <ClCompile Include="TextFilesManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
