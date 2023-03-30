@@ -1,6 +1,9 @@
 #include "Table.h"
 
-Table::Table() : Table(0, 0) { }
+Table::Table() : Table(0, 0) 
+{ 
+	_isInitialised = false;
+}
 
 Table::Table(size_t rows, size_t columns)
 {
@@ -10,6 +13,7 @@ Table::Table(size_t rows, size_t columns)
 	for (size_t row = 0; row < _rowCount; row++)
 		for (size_t column = 0; column < _columnCount; column++)
 			strcpy_s(_values[row][column], default_len, DEFAULT_VALUE);
+	_isInitialised = true;
 }
 
 void Table::SetRowCount(size_t value)
@@ -27,16 +31,24 @@ void Table::SetColumnCount(size_t value)
 		_columnCount = MAX_COLUMN_COUNT;
 }
 
-FunctionStatus Table::AddRow(char** values, size_t columntCount)
+FunctionStatus Table::AddRow(char* values[MAX_VALUE_SIZE], size_t columnCount)
 {
+	if (values == nullptr)
+		return FunctionStatus::InvalidInput;
+	if (columnCount == 0)
+		return FunctionStatus::InvalidInput;
 	if (_rowCount + 1 > MAX_ROW_COUNT)
 		return FunctionStatus::InvalidInput;
-	if (columntCount != _columnCount)
+	if (columnCount != _columnCount)
 		return FunctionStatus::InvalidInput;
 	size_t len = 0;
-	for (size_t i = 0; i < columntCount; i++)
+	for (size_t i = 0; i < columnCount; i++)
 	{
 		len = strlen(values[i]) + 1;
+		if (len > MAX_VALUE_SIZE)
+			return FunctionStatus::InvalidInput;
+		if (len == 0)
+			return FunctionStatus::InvalidInput;
 		strcpy_s(_values[_rowCount][i], len, values[i]);
 	}
 	_rowCount++;
@@ -59,17 +71,21 @@ FunctionStatus Table::SetValueAt(unsigned row, unsigned column, const char* valu
 	return FunctionStatus::Success;
 }
 
-size_t Table::RowCount()
+size_t Table::RowCount() const
 {
 	return _rowCount;
 }
 
-size_t Table::ColumnCount()
+size_t Table::ColumnCount() const
 {
 	return _columnCount;
 }
 
-const char* Table::ValueAt(unsigned row, unsigned column)
+bool Table::IsInitialised() const {
+	return _isInitialised;
+}
+
+const char* Table::ValueAt(unsigned row, unsigned column) const
 {
 	return _values[row][column];
 }
