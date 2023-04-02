@@ -127,7 +127,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Date.cpp" />
+    <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="TextFile.cpp" />
     <ClCompile Include="TextFilesManager.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Time.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Date.h" />
+    <ClInclude Include="DateTime.h" />
+    <ClInclude Include="TextFile.h" />
+    <ClInclude Include="TextFilesManager.h" />
+    <ClInclude Include="Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

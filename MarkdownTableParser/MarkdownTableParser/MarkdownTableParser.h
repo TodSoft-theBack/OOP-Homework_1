@@ -1,59 +1,44 @@
 #pragma once
 #include "Table.h"
-#include <iomanip>
+#include "GenericFunctons.h"
 #include <fstream>
 #include <sstream>
 
-
-const char TABLE_DELIM = '|';
-const char SUBSTRING_DELIM = '\'';
-const char FORMATING_CHAR = ':';
-const char FORMAT_ROW_FILL_CHAR = '-';
-const unsigned FORMATING_ROW_INDEX = 1;
-const unsigned HEADER_ROW_INDEX = 0;
-const size_t MAX_LINE_BUFFER_SIZE = 256;
-
-unsigned CountCharInFile(std::fstream& file, char symbol);
-unsigned CountCharInString(const char* string, char symbol);
-void Trim(char* string);
-bool ContainsChar(const char* string, char symbol);
-char** Split(const char* string, size_t& count);
-char** SubstringSplit(const char* string, size_t& count);
-bool TryParse(const char* string, unsigned& result);
-void Append(char buffer[MAX_LINE_BUFFER_SIZE], const char* value);
-void HandleFunctionResult(FunctionStatus functionResult, const char* messageOnSuccess);
-void FreeMemory(char** strings, size_t count);
+const size_t MAX_FUNCTION_COUNT = 7;
 
 class MarkdownTableParser
 {
 	private:
-		std::fstream file;		
-		Table table;
-		bool rowMask[MAX_ROW_COUNT];
+
+		FunctionStatus(MarkdownTableParser::* Operations[MAX_FUNCTION_COUNT])(const String*, size_t) = 
+		{ 
+			&MarkdownTableParser::Load,
+			&MarkdownTableParser::Print,
+			&MarkdownTableParser::AddRow,
+			&MarkdownTableParser::ChangeColumnName,
+			&MarkdownTableParser::ChangeValue,
+			&MarkdownTableParser::Select,
+			&MarkdownTableParser::SaveToFile,
+		};
+
+		std::fstream file;	
+		Table table;	
 		bool IsLoaded();
-		bool HasFormating();
-		void SetTable();
-		void InitialiseTable();
-		void InitialiseRowMask();
-		void ParseSetCurrentLine(char* line, unsigned rowIndex);
-		size_t GetLongest(unsigned rowIndex);
-		size_t GetLongestCell();
-		ColumnFormating FormatingAt(unsigned column);
-		void PrintNoFormat(std::ostream& stream, size_t width);
-		void PrintFormated(std::ostream& stream, size_t width);
-		int ContainsColumn(char* columnName);
+		FunctionStatus InitialiseTable();
+		FunctionStatus LoadFile(const String filename);
+		FunctionStatus SaveToFile(const String filename);
+		size_t GetColumnCount(const char* string) const;
+		FunctionStatus Load(const String* arguments, size_t count);
+		FunctionStatus Print(const String* arguments, size_t count);
+		FunctionStatus AddRow(const String* arguments, size_t count);
+		FunctionStatus ChangeColumnName(const String* arguments, size_t count);
+		FunctionStatus ChangeValue(const String* arguments, size_t count);
+		FunctionStatus Select(const String* arguments, size_t count);
+		FunctionStatus SaveToFile(const String* arguments, size_t count);
 
 	public:
-		MarkdownTableParser();
-		MarkdownTableParser(const char*);
-		FunctionStatus LoadFile(const char* filename);	
-		FunctionStatus SaveToFile(const char* filename);
-		FunctionStatus Print(std::ostream& stream);
-		FunctionStatus AddRow(char** columns, size_t columnsCount);
-		FunctionStatus ChangeColumnName(char* columnName, char* newColumnName);
-		FunctionStatus ChangeValue(unsigned row,  char* columnName, char* newValue);
-		FunctionStatus ChangeValue(char* columnName, char* currentValue, char* newValue);
-		FunctionStatus Select(char* columnName, char* value);
+		FunctionStatus ExecuteAt(int index, const String* arguments, size_t count);
+
 		
 	~MarkdownTableParser();
 };
