@@ -25,8 +25,8 @@ class MarkdownTableParser
 		Table table;	
 		bool IsLoaded();
 		FunctionStatus InitialiseTable();
-		FunctionStatus LoadFile(const String filename);
-		FunctionStatus SaveToFile(const String filename);
+		FunctionStatus LoadFile(const String& filename);
+		FunctionStatus SaveToFile(const String& filename);
 		size_t GetColumnCount(const char* string) const;
 		FunctionStatus Load(const String* arguments, size_t count);
 		FunctionStatus Print(const String* arguments, size_t count);

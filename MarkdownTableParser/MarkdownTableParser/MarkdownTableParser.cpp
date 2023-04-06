@@ -5,7 +5,7 @@ bool MarkdownTableParser::IsLoaded()
 	return file.is_open();
 }
 
-FunctionStatus MarkdownTableParser::LoadFile(const String filename)
+FunctionStatus MarkdownTableParser::LoadFile(const String& filename)
 {
 	if (filename.Length() == 0)
 		return FunctionStatus::InvalidInput;
@@ -17,7 +17,7 @@ FunctionStatus MarkdownTableParser::LoadFile(const String filename)
 	return InitialiseTable();
 }
 
-FunctionStatus MarkdownTableParser::SaveToFile(const String filename)
+FunctionStatus MarkdownTableParser::SaveToFile(const String& filename)
 {
 	if (filename.Length() == 0)
 		return FunctionStatus::InvalidInput;
@@ -57,8 +57,6 @@ FunctionStatus MarkdownTableParser::Print(const String* arguments, size_t count)
 
 FunctionStatus MarkdownTableParser::Load(const String* arguments, size_t count)
 {
-	if (!IsLoaded())
-		return FunctionStatus::ExecutionFailed;
 	if (count != 1)
 		return FunctionStatus::InvalidInput;
 	return LoadFile(arguments[0]);

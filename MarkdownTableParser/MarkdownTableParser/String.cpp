@@ -124,7 +124,7 @@ char String::Last() const
 
 size_t String::Length() const
 {
-	return length - 1;
+	return length;
 }
 
 bool String::IsEmpty() const

@@ -3,8 +3,8 @@
 Table::Table()
 { 
 	_columnCount = _rowCount = 0;
-	rowMask[0] = false;
 	_isInitialised = false;
+	InitialiseRowMask(false);
 }
 
 Table::Table(size_t rows, size_t columns, std::istream& stream)
@@ -16,6 +16,7 @@ Table::Table(size_t rows, size_t columns, std::istream& stream)
 		for (size_t column = 0; column < _columnCount; column++)
 			_values[row][column] = String(DEFAULT_VALUE, 12);
 	LoadDataFromStream(stream);
+	InitialiseRowMask(true);
 	_isInitialised = true;
 }
 
@@ -48,6 +49,16 @@ void Table::LoadDataFromStream(std::istream& stream)
 	} while (true);
 }
 
+void Table::InitialiseRowMask(bool value)
+{
+	if (!_isInitialised)
+	{
+
+	}
+	for (size_t i = 0; i < _rowCount; i++)
+		rowMask[i] = value;
+}
+
 bool Table::IsInitialised() 
 {
 	return _isInitialised;
@@ -69,7 +80,7 @@ void Table::SetColumnCount(size_t value)
 		_columnCount = MAX_COLUMN_COUNT;
 }
 
-FunctionStatus Table::SetValueAt(unsigned row, unsigned column, const String value)
+FunctionStatus Table::SetValueAt(unsigned row, unsigned column, const String& value)
 {
 	if (row > _rowCount || column > _columnCount || value.Length() == 0)
 		return FunctionStatus::InvalidInput;

@@ -35,7 +35,7 @@ class Table
 		bool _isInitialised;
 		void SetRowCount(size_t rowCount);
 		void SetColumnCount(size_t columnCount);
-		FunctionStatus SetValueAt(unsigned row, unsigned column, const String value);
+		FunctionStatus SetValueAt(unsigned row, unsigned column, const String& value);
 		bool ValidateArguments(const String* argumnets, size_t count, size_t requiredCount) const;
 		bool HasFormating() const;
 		bool HasFormating(unsigned column) const;
@@ -45,7 +45,7 @@ class Table
 		int ContainsColumn(const String columnName) const;
 		void LoadCurrentLine(char* line, unsigned row);
 		void LoadDataFromStream(std::istream& stream);
-
+		void InitialiseRowMask(bool value);
 	public:
 		Table();
 		Table(size_t, size_t, std::istream& stream);
