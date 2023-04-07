@@ -6,10 +6,12 @@ const size_t MAX_COMMANDS_COUNT = 6;
 const size_t MAX_MODIFIERSxCOMANDS_COUNT = 7;
 const size_t MAX_COMMAND_SIZE = 16;
 const size_t MAX_ARGUMENT_COUNT = 5;
-const char* COMMANDS[MAX_COMMAND_SIZE] = { "Load", "Print", "Add", "Select", "Save", "Change" };
-const bool HAS_MODIFIERS[MAX_COMMANDS_COUNT] = { 0, 0, 1, 0, 0, 1 };
-const int INDEX_BINDING[MAX_COMMANDS_COUNT] = { 0, 1, 2, 3, 4, 5 };
-const char* MODIFIERSxCOMANDS[MAX_COMMAND_SIZE] = { "Load", "Print", "Row", "Select", "Save", "ColcumnName", "Value" };
+const char* COMMANDS[MAX_COMMAND_SIZE] = { "Load", "Print", "Add", "Change", "Select", "Save" };
+const bool HAS_MODIFIERS[MAX_COMMANDS_COUNT] = { 0, 0, 1, 1, 0, 0 };
+const int INDEX_BINDING[MAX_COMMANDS_COUNT] = { 0, 1, 2, 3, 5, 6 };
+const char* MODIFIERSxCOMANDS[MAX_COMMAND_SIZE] = { "Load", "Print", "Row", "ColumnName", "Value", "Select", "Save", };
+const char* COMMAND_SUCCESS_MASSAGES[MAX_BUFFER] = { "Loaded ", "", "Added a new row!", "Changed column to ", "Changed value to ", "", "Saved to "};
+const int MESSAGE_ARGUMENT_INDECIES[MAX_MODIFIERSxCOMANDS_COUNT] = { 0, -1, -1, 1, 2, -1, 0 };
 
 CommandInterface::CommandInterface()
 {
@@ -32,22 +34,25 @@ void CommandInterface::Run()
 		ExecuteOperation(command, arguments);
 
 	} while (strcmp(command, "Quit") != 0);
-	std::cout << "Starting MarkdownTableParser ..." << std::endl;
+	std::cout << "Exiting MarkdownTableParser ..." << std::endl;
 }
 
 void CommandInterface::ExecuteOperation(char* command, std::stringstream& processor)
 {
-	size_t count = 0;
-	String* arguments;
-	char message[MAX_BUFFER];
-	message[0] = '\0';
-	FunctionStatus functionResult = FunctionStatus::None;
+	if (strcmp(command, "Quit") == 0)
+		return;
 
 	if (strcmp(command, "\0") == 0)
 	{
 		std::cout << "Please, donot spam empty commands! I have worked hard on this!" << std::endl;
 		return;
 	}
+
+	size_t count = 0;
+	String* arguments;
+	char message[MAX_BUFFER];
+	message[0] = '\0';
+	FunctionStatus functionResult = FunctionStatus::None;
 
 	int index = GetCommandIndex(command, processor);
 	if (index < 0)
@@ -59,24 +64,26 @@ void CommandInterface::ExecuteOperation(char* command, std::stringstream& proces
 	arguments = ExtractArguments(processor, count);
 
 	functionResult = tableParser.ExecuteAt(index, arguments, count);
+
+	GetSuccessMessage(message, index, arguments, count);
+
 	HandleFunctionResult(functionResult, message);
 	FreeMemory(arguments, count);
 }
 
-int CommandInterface::GetCommandIndex(const char* command, std::stringstream& processor)
+int CommandInterface::GetCommandIndex(const char* command, std::stringstream& processor) const
 {
 	for (size_t i = 0; i < MAX_COMMANDS_COUNT; i++)
 		if (strcmp(COMMANDS[i], command) == 0)
 		{
 			if (HAS_MODIFIERS[i])
 				return GetModifierIndex(i, processor);
-			return i;
+			return INDEX_BINDING[i];
 		}
-
 	return -1;
 }
 
-int CommandInterface::GetModifierIndex(size_t currentIndex, std::stringstream& processor) 
+int CommandInterface::GetModifierIndex(size_t currentIndex, std::stringstream& processor)  const
 {
 	int index = currentIndex;
 
@@ -92,11 +99,21 @@ int CommandInterface::GetModifierIndex(size_t currentIndex, std::stringstream& p
 	for (size_t i = currentIndex; i < upperBound; i++)
 		if (strcmp(modifier, MODIFIERSxCOMANDS[i]) == 0)
 			return i;
-
 	return -1;
 }
 
-String* CommandInterface::ExtractArguments(std::stringstream& processor, size_t& count)
+void CommandInterface::GetSuccessMessage(char* message, int index, const String* arguments, size_t count) const
+{
+	if (index < -1 || index > MAX_MODIFIERSxCOMANDS_COUNT)
+		return;
+	Append(message, COMMAND_SUCCESS_MASSAGES[index]);
+	int argumentIndex = MESSAGE_ARGUMENT_INDECIES[index];
+	if (argumentIndex < -1 || argumentIndex > MAX_MODIFIERSxCOMANDS_COUNT)
+		return;
+	Append(message, arguments[argumentIndex].Value());
+}
+
+String* CommandInterface::ExtractArguments(std::stringstream& processor, size_t& count) const
 {
 	char argumentData[ARGUMENT_BUFFER];
 	processor.getline(argumentData, ARGUMENT_BUFFER);
@@ -104,7 +121,7 @@ String* CommandInterface::ExtractArguments(std::stringstream& processor, size_t&
 	return SplitStringToArguments(argumentData, count);
 }
 
-String* CommandInterface::SplitStringToArguments(const char* string, size_t& argumentCount)
+String* CommandInterface::SplitStringToArguments(const char* string, size_t& argumentCount) const
 {
 	argumentCount = String::CountCharInString(string, ' ') + 1;
 	String* result = new String[argumentCount];
@@ -127,6 +144,7 @@ void CommandInterface::HandleFunctionResult(FunctionStatus functionResult, const
 {
 	if (functionResult == FunctionStatus::Success)
 	{
+		
 		if (messageOnSuccess != nullptr && messageOnSuccess[0] != '\0')
 			std::cout << messageOnSuccess << std::endl;
 	}
@@ -143,5 +161,5 @@ void CommandInterface::FreeMemory(String* strings, size_t count)
 
 CommandInterface::~CommandInterface()
 {
-
+	// no need to delete anything as the delete is handles by the appropriate function
 }

@@ -87,6 +87,7 @@ FunctionStatus MarkdownTableParser::Select(const String* arguments, size_t count
 {
 	if (!IsLoaded())
 		return FunctionStatus::ExecutionFailed;
+	return table.Select(arguments, count);
 }
 
 FunctionStatus MarkdownTableParser::SaveToFile(const String* arguments, size_t count)

@@ -51,10 +51,6 @@ void Table::LoadDataFromStream(std::istream& stream)
 
 void Table::InitialiseRowMask(bool value)
 {
-	if (!_isInitialised)
-	{
-
-	}
 	for (size_t i = 0; i < _rowCount; i++)
 		rowMask[i] = value;
 }
@@ -239,7 +235,7 @@ FunctionStatus Table::ChangeColumnName(const String* argumnets, size_t count)
 {
 	if (!_isInitialised)
 		return FunctionStatus::ExecutionFailed;
-	if (!ValidateArguments(argumnets, count, _columnCount))
+	if (!ValidateArguments(argumnets, count, 2))
 		return FunctionStatus::InvalidInput;
 	int columnIndex = ContainsColumn(argumnets[0]);
 	if (columnIndex == -1)
