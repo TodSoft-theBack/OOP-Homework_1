@@ -9,7 +9,7 @@ void String::FreeMemberMemory()
 void String::CopyMemberData(const String& string)
 {
 	container = new char[string.capacity];
-	strcpy_s(container, string.capacity, string.container);
+	strcpy(container, string.container);
 	capacity = string.capacity;
 	length = string.length;
 }
@@ -34,7 +34,7 @@ String::String(const char* string)
 {
 	size_t len = strlen(string) + 1;
 	container = new char[len];
-	strcpy_s(container, len, string);
+	strcpy(container, string);
 	capacity = len;
 	length = len - 1;
 }
@@ -42,7 +42,7 @@ String::String(const char* string)
 String::String(const char* string, size_t len)
 {
 	container = new char[len];
-	strcpy_s(container, len, string);
+	strcpy(container, string);
 	capacity = len;
 	length = len;
 }

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <cstring>
 
 //this file is like a configuratio file for the tipe of tables this project can parse
 

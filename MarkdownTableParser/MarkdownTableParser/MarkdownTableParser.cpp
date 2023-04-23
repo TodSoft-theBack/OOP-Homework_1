@@ -11,7 +11,7 @@ FunctionStatus MarkdownTableParser::LoadFile(const String& filename)
 		return FunctionStatus::InvalidInput;
 	if (IsLoaded())
 		file.close();
-	file.open(filename.Value(), std::ios::in | std::ios::_Nocreate);
+	file.open(filename.Value(), std::ios::in);
 	if (!file)
 		return FunctionStatus::InvalidInput;
 	return InitialiseTable();
@@ -25,7 +25,7 @@ FunctionStatus MarkdownTableParser::SaveToFile(const String& filename)
 		file.close();
 	if (!table.IsInitialised())
 		return FunctionStatus::ExecutionFailed;
-	file.open(filename.Value(), std::ios::out | std::ios::_Noreplace);
+	file.open(filename.Value(), std::ios::out );
 	if (!file)
 		return FunctionStatus::InvalidInput;
 	table.PrintToStream(file);

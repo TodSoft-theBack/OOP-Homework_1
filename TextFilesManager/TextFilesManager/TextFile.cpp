@@ -41,10 +41,10 @@ TextFile::TextFile()
 
 TextFile::TextFile(const char* filename, uint8_t hours, uint8_t minutes, uint8_t seconds, uint8_t day, uint8_t month, unsigned year, const char rights[RIGHTS_SIZE])
 {
-	strcpy_s(this->filename, FILENAME_SIZE, filename);
+	strcpy(this->filename, filename);
 	SetTimeCreated(DateTime(hours, minutes, seconds, day, month, year));
 	SetLastModified(DateTime(hours, minutes, seconds, day, month, year));
-	strcpy_s(this->rights, RIGHTS_SIZE, rights);
+	strcpy(this->rights, rights);
 }
 
 const char* TextFile::Filename() const
@@ -61,8 +61,7 @@ void TextFile::Edit(const char* newContent,const DateTime& currentTime)
 {
 	if (newContent == nullptr)
 		return;
-	size_t len = strlen(newContent) + 1;
-	strcpy_s(content, len, newContent);
+	strcpy(content, newContent);
 	SetLastModified(currentTime);
 }
 

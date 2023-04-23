@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <cstring>
 #include "DateTime.h"
 
 enum class FunctionResult 
